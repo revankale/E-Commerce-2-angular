@@ -1,0 +1,221 @@
+<!-- NavBar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom border-top ">
+  <div class="container">
+    <a class="navbar-brand fs-2 fw-bold pt-0" routerLink="/products"><i class="fa fa-cart-arrow-down fs-2 pe-2"
+        style="color: #34a1b2;"></i><span class="textBlur">SnapDeal</span></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <!--Toggle  -->
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Nav Items -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0  text-center ">
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle fw-semibold text-uppercase  me-1 text-danger" href="#" id="navbarDropdown"
+            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            home
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item " routerLink="/products">Fashion 1</a></li>
+            <li><a class="dropdown-item" routerLink="/products">Fashion 2</a></li>
+            <li><a class="dropdown-item" routerLink="/products">furniture 1</a></li>
+            <li><a class="dropdown-item" routerLink="/products">furniture 2</a></li>
+            <li><a class="dropdown-item" routerLink="/products">Electronics 1</a></li>
+            <li><a class="dropdown-item" routerLink="/products">Electronics 1</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle redHover fw-semibold text-uppercase text-black  me-1" id="navbarDropdown"
+            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            pages
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item">About Us</a></li>
+            <li><a class="dropdown-item">Contact Us</a></li>
+
+            <li><a class="dropdown-item">Terms and Conditions</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold text-uppercase text-black me-1">Contact us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"><i class="fa-solid fa-magnifying-glass fs-5" style="color: #0c0d0d;"></i></a>
+        </li>
+        <!-- cart -->
+        <ng-container *ngIf="loggedInObj.custId">
+          <li class="nav-item dropdown position-relative d-inline-block hand">
+            <a class="nav-link dropdown-toggle"><i class="fa fa-cart-shopping fs-5 me-1" style="color: #202122;"></i>
+              <span class="position-absolute  translate-middle badge rounded-pill bg-danger">
+                {{cartItem.length}}
+              </span>
+            </a>
+            <ng-container *ngIf="cartItem.length !== 0">
+              <ul class="dropdown-menu menuOnLeft rounded-0 mt-2" aria-labelledby="navbarDropdown">
+                <li class="p-2" *ngFor="let item of cartItem">
+                  <div class="d-flex w-100 border-bottom justify-content-evenly">
+                    <img class="img-fluid p-2" style="height: 75px !important;" [src]="item.productImageUrl" alt="">
+                    <div>
+                      <a class="text-decoration-none text-black fw-semibold">
+                        <p class="m-0 p-0">{{item.productShortName}}</p>
+                      </a>
+                      <p>1 <i class="fa-solid fa-xmark" style="color: #0d0d0d;"></i>{{item.productPrice | currency:
+                        'INR'}}</p>
+                    </div>
+                    <button class="btn closeBtn" style="height: auto;"
+                      (click)="deleteProductFromCartById(item.cartId)"><i class="fa fa-xmark"></i></button>
+                  </div>
+                </li>
+                <li class="p-2">
+                  <div class=" w-100 ">
+                    <div class="d-flex justify-content-between">
+                      <h6>SubTotal :</h6>
+                      <h6>{{calculateTotalSubtotal() | currency: 'INR'}}</h6>
+                    </div>
+                    <div class="d-flex justify-content-evenly mt-2">
+                      <button class="btn btn-dark rounded-0 px-3"> View Cart</button>
+                      <a routerLink="/checkout"> <button class="btn btn-danger rounded-0 px-3">Checkout</button></a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </ng-container>
+            <ng-container *ngIf="cartItem.length == 0">
+              <ul class="dropdown-menu menuOnLeft rounded-0 mt-2" aria-labelledby="navbarDropdown">
+                <li>
+                  <p class="fw-bold text-center mb-0">Cart Is Empty</p>
+                </li>
+              </ul>
+            </ng-container>
+          </li>
+          <li class="nav-item" style="list-style: none; white-space: nowrap;">
+            <span class="text-dark"><i class="fa fa-user ms-3 me-1 mt-2"></i>{{loggedInObj.name | uppercase}}</span>
+          </li>
+          <li class="nav-item ms-4">
+            <button class="btn btn-sm btn-danger logOutBtn" (click)="onLogOut()"> <i class="fa fa-sign-out"
+                aria-hidden="true"></i></button>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="!loggedInObj.custId">
+          <li class="nav-item">
+            <a class="nav-link log_Reg_Border text-decoration-none text-black fw-semibold text-uppercase hand"
+              data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link log_Reg_Border text-decoration-none text-black fw-semibold text-uppercase hand"
+              data-bs-toggle="modal" data-bs-target="#exampleModal">register</a>
+          </li>
+        </ng-container>
+        <!-- <ng-container *ngIf="loggedInObj.custId">
+          <li class="nav-item" style="list-style: none; white-space: nowrap;">
+            <span class="text-dark"><i class="fa fa-user ms-3 me-1 mt-2"></i>{{loggedInObj.name | uppercase}}</span>
+          </li>
+          <li class="nav-item ms-4">
+            <button class="btn btn-sm btn-danger logOutBtn" (click)="onLogOut()"> <i class="fa fa-sign-out"
+                aria-hidden="true"></i></button>
+          </li>
+        </ng-container> -->
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- login offcanvas -->
+<div class="offcanvas offcanvas-end m-5" tabindex="-1" id="offcanvasRight">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel">Sign In</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7 col-lg-12">
+            <div class="wrap">
+              <div class="img" style="background-image: url(images/bg-1.jpg);"></div>
+              <div class="login-wrap">
+                <form action="#" class="signin-form">
+                  <div class="form-group mt-3">
+                    <label class="form-control-placeholder fw-bold my-1" for="username">Mobile Number</label>
+                    <input type="text" name="UserName" class="form-control" [(ngModel)]="loginObj.UserName"
+                      placeholder="Enter Mobile Number" required>
+                  </div>
+                  <div class="form-group mt-4 position-relative">
+                    <label class="form-control-placeholder fw-bold my-1" for="password">Password</label>
+                    <input id="password-field" [type]="showPassword?'text':'password'" name="UserPassword"
+                      class="form-control" [(ngModel)]="loginObj.UserPassword" placeholder="Enter Password" required>
+                    <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password hand password-eye"
+                      (click)="onEyeClick()" *ngIf="showPassword == true"></span>
+                    <span toggle="#password-field"
+                      class="fa fa-fw fa-eye-slash field-icon toggle-password hand password-eye" (click)="onEyeClick()"
+                      *ngIf="showPassword == false"></span>
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" class=" my-4 form-control btn btn-primary rounded submit px-3"
+                      (click)="onLogin()" id="loginButton">Sign In <span *ngIf="isApiCallInProgress"
+                        class="spinner-border spinner-border-sm"></span></button>
+                  </div>
+                  <div class="form-group d-md-flex">
+                    <div class="w-50 text-left">
+                      <label class="checkbox-wrap checkbox-primary mb-0">Remember Me
+                        <input type="checkbox" checked>
+                        <span class="checkmark"></span>
+                      </label>
+                    </div>
+                    <div class="w-50 text-md-right">
+                      <a href="#">Forgot Password</a>
+                    </div>
+                  </div>
+                </form>
+                <p class="text-center mt-4">Not a member? <a data-toggle="tab" href="#signup">Sign
+                    Up</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- register model -->
+<div class="modal fade" id="exampleModal" #exampleModal tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Register</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body ">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 my-2">
+              <label class="fw-bold my-1">Full Name</label>
+              <input type="text" class="form-control" [(ngModel)]="registerObj.Name" placeholder="Enter Your Name">
+            </div>
+            <div class="col-12 my-2">
+              <label class="fw-bold my-1">Contact Number</label>
+              <input type="text" class="form-control" [(ngModel)]="registerObj.MobileNo"
+                placeholder="Enter Mobile Number">
+            </div>
+            <div class="col-12 my-2">
+              <label class="fw-bold my-1">Set Password</label>
+              <input type="password" class="form-control" [(ngModel)]="registerObj.Password"
+                placeholder="Enter Password">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="onRegister()">Register <span *ngIf="isApiCallInProgress"
+            class="spinner-border spinner-border-sm"></span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<router-outlet></router-outlet>
